@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dockerpy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dockerpy
+  template:
+    metadata:
+      labels:
+        app: dockerpy
+    spec:
+      containers:
+        - name: dockerpy
+          image: rameshsedol/dockerpy:v2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
